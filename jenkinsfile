@@ -5,13 +5,20 @@ pipeline {
  stages {
 
    stage('Clone App Repo'){
-     dir('APP'){
-     git branch: 'main', url: 'https://github.com/swedevops/cart'
-     }
+     steps {
+       dir('APP'){
+           git branch: 'main', url: 'https://github.com/swedevops/cart'
+       }
+      }
+
     }
 
    stage('Helm Deploy') {
+   steps {
+
      sh 'helm upgrade -i ${component} . APP/value.yaml'
+
+     }
   }
 
  }
