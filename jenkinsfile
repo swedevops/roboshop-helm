@@ -8,9 +8,9 @@ pipeline {
 
  stages {
 
-   stage('Clone App Repo'){
+   stage('Clone App Repo') {
      steps {
-       dir('APP'){
+       dir('APP') {
            git branch: 'main', url: 'https://github.com/swedevops/${component}'
        }
       }
