@@ -4,6 +4,8 @@ pipeline {
 
  parameters{
    string(name: 'component', defaultValue: '', description: 'App Component Name')
+   string(name: 'app_version', defaultValue: '', description: 'App Version')
+
  }
 
  stages {
@@ -20,7 +22,7 @@ pipeline {
    stage('Helm Deploy') {
    steps {
 
-     sh 'helm upgrade -i ${component} . -f APP/value.yaml'
+     sh 'helm upgrade -i ${component} . -f APP/value.yaml --set app_version=${app_version}'
 
      }
   }
