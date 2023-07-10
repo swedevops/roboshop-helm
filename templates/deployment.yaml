@@ -20,20 +20,36 @@ spec:
       labels:
         {{- include "roboshop.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      volumes:
+        - name: params-volume
+          emptyDir:
+            sizeLimit: 5Mi
+        {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ .Values.appName }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: aws-ssm-pm
+          image: 633788536644.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-store:latest
+          imagePullPolicy: Always
+          env:
+            - name: PARAMS
+              value: { { .Values.params } }
+          volumeMounts:
+            - mountPath: /params
+              name: params-volume
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: 494970943538.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.app_version }}
-
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: /params
+              name: params-volume
           ports:
             - name: http
               containerPort: 80
