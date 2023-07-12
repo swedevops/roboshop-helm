@@ -50,29 +50,29 @@ spec:
           volumeMounts:
             - mountPath: /params
               name: params-volume
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
+         ports:
+             - name: http
+               containerPort: { { .Values.appPort } }
+               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+               httpGet:
+                 path: /health
+                 port: { { .Values.appPort } }
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+               httpGet:
+                 path: /health
+                 port: { { .Values.appPort } }
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+              { { - toYaml .Values.resources | nindent 12 } }
+            { { - with .Values.nodeSelector } }
+          nodeSelector:
+              { { - toYaml . | nindent 8 } }
+            { { - end } }
+            { { - with .Values.affinity } }
+          affinity:
+              { { - toYaml . | nindent 8 } }
+            { { - end } }
+            { { - with .Values.tolerations } }
+          tolerations:
+              { { - toYaml . | nindent 8 } }
+            { { - end } }
