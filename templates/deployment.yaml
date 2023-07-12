@@ -54,15 +54,15 @@ spec:
              - name: http
                containerPort: { { .Values.appPort } }
                protocol: TCP
-          livenessProbe:
+        livenessProbe:
                httpGet:
                  path: /health
                  port: { { .Values.appPort } }
-          readinessProbe:
+        readinessProbe:
                httpGet:
                  path: /health
                  port: { { .Values.appPort } }
-          resources:
+        resources:
               { { - toYaml .Values.resources | nindent 12 } }
             { { - with .Values.nodeSelector } }
           nodeSelector:
