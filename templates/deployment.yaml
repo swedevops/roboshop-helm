@@ -33,7 +33,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: aws-ssm-pm
-          image: 494970943538.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-store
+          image: 494970943538.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-store:latest
           imagePullPolicy: Always
           env:
             - name: PARAMS
@@ -42,7 +42,7 @@ spec:
             - mountPath: /params
               name: params-volume
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Values.appName }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: 494970943538.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.app_version }}
@@ -50,29 +50,29 @@ spec:
           volumeMounts:
             - mountPath: /params
               name: params-volume
-        ports:
-             - name: http
-               containerPort: { { .Values.appPort } }
-               protocol: TCP
-         livenessProbe:
-               httpGet:
-                 path: /health
-                 port: { { .Values.appPort } }
-         readinessProbe:
-               httpGet:
-                 path: /health
-                 port: { { .Values.appPort } }
-         resources:
-              { { - toYaml .Values.resources | nindent 12 } }
-            { { - with .Values.nodeSelector } }
-          nodeSelector:
-              { { - toYaml . | nindent 8 } }
-            { { - end } }
-            { { - with .Values.affinity } }
-          affinity:
-              { { - toYaml . | nindent 8 } }
-            { { - end } }
-            { { - with .Values.tolerations } }
-          tolerations:
-              { { - toYaml . | nindent 8 } }
-            { { - end } }
+          ports:
+            - name: http
+              containerPort: {{ .Values.appPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.appPort }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.appPort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
