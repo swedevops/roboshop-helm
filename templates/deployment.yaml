@@ -33,7 +33,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: aws-ssm-pm
-          image: 494970943538.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-store:latest
+          image: 283181175075.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-store:latest
           imagePullPolicy: Always
           env:
             - name: PARAMS
@@ -45,7 +45,7 @@ spec:
         - name: {{ .Values.appName }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: 494970943538.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.app_version }}
+          image: 283181175075.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.app_version }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
             - mountPath: /params

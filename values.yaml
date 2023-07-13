@@ -19,7 +19,7 @@ serviceAccount:
   create: true
   # Annotations to add to the service account
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::494970943538:role/eks-ssm-ps-dev-role
+    eks.amazonaws.com/role-arn: arn:aws:iam::283181175075:role/eks-ssm-ps-dev-role
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
